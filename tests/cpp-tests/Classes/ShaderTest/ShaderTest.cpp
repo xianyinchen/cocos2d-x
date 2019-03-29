@@ -24,7 +24,10 @@
 
 #include "ShaderTest.h"
 #include "../testResource.h"
+
 #include "cocos2d.h"
+#include "ui/CocosGUI.h"
+#include "cocostudio/CocoStudio.h"
 
 USING_NS_CC;
 USING_NS_CC_EXT;
@@ -32,16 +35,6 @@ USING_NS_CC_EXT;
 ShaderTests::ShaderTests()
 {
     ADD_TEST_CASE(ShaderLensFlare);
-    ADD_TEST_CASE(ShaderMandelbrot);
-    ADD_TEST_CASE(ShaderJulia);
-    ADD_TEST_CASE(ShaderHeart);
-    ADD_TEST_CASE(ShaderFlower);
-    ADD_TEST_CASE(ShaderPlasma);
-    ADD_TEST_CASE(ShaderBlur);
-    ADD_TEST_CASE(ShaderRetroEffect);
-    ADD_TEST_CASE(ShaderMonjori);
-    ADD_TEST_CASE(ShaderGlow);
-    ADD_TEST_CASE(ShaderMultiTexture);
 }
 
 ///---------------------------------------
@@ -627,29 +620,54 @@ ShaderLensFlare::ShaderLensFlare()
 
 std::string ShaderLensFlare::title() const
 {
-    return "ShaderToy Test";
+    return " ";
 }
 
 std::string ShaderLensFlare::subtitle() const
 {
-    return "Lens Flare";
+    return "click to load shader program once!";
 }
 
 bool ShaderLensFlare::init()
 {
     if (ShaderTestDemo::init())
     {
-        auto sn = ShaderNode::shaderNodeWithVertex("", "Shaders/shadertoy_LensFlare.fsh");
+        auto label = LabelTTF::create("laod time 0", "Marker Felt", 30);
+        label->setColor(Color3B(255,0,0));
+        addChild(label);
         
-        auto s = Director::getInstance()->getWinSize();
-        sn->setPosition(Vec2(s.width/2, s.height/2));
-        sn->setContentSize(Size(s.width/2,s.height/2));
-        addChild(sn);
+        label->setTag(3);
+        label->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/2);
+        
+        auto touchListener = EventListenerTouchAllAtOnce::create();
+        touchListener->onTouchesEnded = CC_CALLBACK_2(ShaderLensFlare::onTouchesEnded, this);
+        _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
         
         return true;
     }
     
     return false;
+}
+
+void ShaderLensFlare::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
+{
+    auto label = (LabelTTF*)getChildByTag(3);
+    
+    std::chrono::steady_clock::time_point tt = std::chrono::steady_clock::now();
+    
+    CC_OPTIMIZE_ITEM("shader_compile", 1, false);
+    for (int i=20; i>0; --i){
+        GLProgramCache::destroyInstance();
+        GLProgramCache::getInstance();
+    }
+    CC_OPTIMIZE_ITEM("shader_compile", 0, false);
+    
+    std::chrono::steady_clock::time_point tt2 = std::chrono::steady_clock::now();
+    long duration = static_cast<long>(std::chrono::duration_cast<std::chrono::microseconds>(tt2 - tt).count());
+    
+    char tttt[256] = {0};
+    sprintf(tttt, "laod time %f", ((double)duration)/1000000);
+    label->setString(tttt);
 }
 
 //
@@ -661,7 +679,7 @@ ShaderGlow::ShaderGlow()
 
 std::string ShaderGlow::title() const
 {
-    return "ShaderToy Test";
+    return " ";
 }
 
 std::string ShaderGlow::subtitle() const

@@ -255,6 +255,10 @@ public:
     /** Gets all ParticleSystem references
      */
     static Vector<ParticleSystem*>& getAllParticleSystems();
+    /** Gets all ParticleSystem total particle Count
+     */
+    static ssize_t getAllParticleCount();
+    
 public:
     void addParticles(int count);
     

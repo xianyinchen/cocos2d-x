@@ -48,6 +48,7 @@ extern "C" size_t __ctype_get_mb_cur_max(void) {
 #endif
 
 static const std::string helperClassName = "org.cocos2dx.lib.Cocos2dxHelper";
+static std::map<std::string, std::string> optimiseCache;
 
 NS_CC_BEGIN
 
@@ -135,6 +136,20 @@ bool Application::openURL(const std::string &url)
 
 void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {
 
+}
+
+static bool _stopFPS = false;
+
+
+void Application::optimiseEvent(const char* thing, const float value, const bool isFPS){
+    if (_stopFPS && isFPS)
+        return;
+    JniHelper::callStaticVoidMethod(helperClassName, "optimiseEvent", thing, value);
+}
+
+
+void Application::pauseFrameEvent(const bool isTrue){
+    _stopFPS = isTrue;
 }
 
 NS_CC_END

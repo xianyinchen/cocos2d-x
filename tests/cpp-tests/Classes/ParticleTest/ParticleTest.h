@@ -35,7 +35,9 @@ protected:
     cocos2d::ParticleSystemQuad* _emitter;
     cocos2d::Sprite* _background;
     cocos2d::LayerColor* _color;
-
+    uint32_t _particleCount;
+    uint32_t _particleInst;
+    
 public:
     ~ParticleDemo();
 

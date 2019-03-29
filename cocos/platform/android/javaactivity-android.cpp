@@ -38,6 +38,7 @@ THE SOFTWARE.
 #include "2d/CCDrawingPrimitives.h"
 #include "platform/android/jni/JniHelper.h"
 #include "network/CCDownloader-android.h"
+#include <unistd.h>
 #include <android/log.h>
 #include <android/api-level.h>
 #include <jni.h>
@@ -108,6 +109,9 @@ JNIEXPORT void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, j
         director->setGLDefaultValues();
     }
     cocos2d::network::_preloadJavaDownloaderClass();
+
+    CC_OPTIMIZE_ITEM("render_pid", getpid(), false);
+    CC_OPTIMIZE_ITEM("buffer_size", w * h, false);
 }
 
 JNIEXPORT jintArray Java_org_cocos2dx_lib_Cocos2dxActivity_getGLContextAttrs(JNIEnv*  env, jobject thiz)

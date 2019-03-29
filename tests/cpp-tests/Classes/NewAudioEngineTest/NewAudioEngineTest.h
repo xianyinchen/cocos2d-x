@@ -180,9 +180,13 @@ public:
     CREATE_FUNC(AudioIssue11143Test);
 
     virtual bool init() override;
-
+    virtual void onExit() override;
+    
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
+    void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event);
+    
+    ssize_t audio_count;
 };
 
 class AudioPerformanceTest : public AudioEngineTestDemo

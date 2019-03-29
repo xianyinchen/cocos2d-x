@@ -132,6 +132,12 @@ public:
      * Gets count of nodes those are attached to scene graph.
      */
     static int getAttachedNodeCount();
+    
+    /**
+     * Gets count of nodes those are attached to scene graph.
+     */
+    static int getTransformNodeCount();
+    static void resetTransformNodeCount();
 public:
     
     /**
@@ -2035,7 +2041,7 @@ public:
 #endif
 
     static int __attachedNodeCount;
-    
+    static int __transformNodeCount;
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Node);
 };

@@ -154,6 +154,20 @@ public:
      * @lua NA
      */
     virtual bool openURL(const std::string &url) = 0;
+    
+    /**
+     @brief send optimization codes for devices.
+     * @js NA
+     * @lua NA
+     */
+    virtual void optimiseEvent(const char* thing, const float value, const bool isFPS = false) {};
+    
+    /**
+     @brief stop frame optimization codes for devices.
+     * @js NA
+     * @lua NA
+     */
+    virtual void pauseFrameEvent(const bool isTrue) {};
 };
 
 // end of platform group

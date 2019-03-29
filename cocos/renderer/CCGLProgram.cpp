@@ -483,6 +483,7 @@ bool GLProgram::compileShader(GLuint * shader, GLenum type, const GLchar* source
     }
 
     std::string headersDef;
+
     if (compileTimeHeaders.empty()) {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WINRT
         headersDef = (type == GL_VERTEX_SHADER ? "precision mediump float;\n precision mediump int;\n" : "precision mediump float;\n precision mediump int;\n");
@@ -526,7 +527,6 @@ bool GLProgram::compileShader(GLuint * shader, GLenum type, const GLchar* source
             CCLOG("cocos2d: %s", getFragmentShaderLog().c_str());
         }
         free(src);
-
         return false;
     }
 

@@ -59,6 +59,7 @@ NS_CC_BEGIN
 // FIXME:: Yes, nodes might have a sort problem once every 30 days if the game runs at 60 FPS and each frame sprites are reordered.
 std::uint32_t Node::s_globalOrderOfArrival = 0;
 int Node::__attachedNodeCount = 0;
+int Node::__transformNodeCount = 0;
 
 // MARK: Constructor, Destructor, Init
 
@@ -1229,7 +1230,10 @@ uint32_t Node::processParentFlags(const Mat4& parentTransform, uint32_t parentFl
     
 
     if(flags & FLAGS_DIRTY_MASK)
+    {
+        __transformNodeCount = __transformNodeCount + 1;
         _modelViewTransform = this->transform(parentTransform);
+    }
     
     _transformUpdated = false;
     _contentSizeDirty = false;
@@ -2216,6 +2220,17 @@ int Node::getAttachedNodeCount()
 {
     return __attachedNodeCount;
 }
+
+int Node::getTransformNodeCount()
+{
+    return __transformNodeCount;
+}
+
+void Node::resetTransformNodeCount()
+{
+    __transformNodeCount = 0;
+}
+
 
 // MARK: Deprecated
 

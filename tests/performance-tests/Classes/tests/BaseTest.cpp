@@ -196,7 +196,7 @@ void TestList::runThisTest()
         });
         autoTestItem->setPosition(Vec2(VisibleRect::left().x + 80, VisibleRect::bottom().y + 100));
 
-        auto menu = Menu::create(closeItem, autoTestItem, nullptr);
+        auto menu = Menu::create(closeItem, nullptr);
         menu->setPosition(Vec2::ZERO);
         scene->addChild(menu, 1);
     }
@@ -448,8 +448,8 @@ void TestCase::onEnter()
     if (_testSuite && _testSuite->getChildTestCount() < 2)
     {
         _priorTestItem->setVisible(false);
-        _nextTestItem->setVisible(false);
-        _restartTestItem->setVisible(false);
+        _nextTestItem->setVisible(true);
+        _restartTestItem->setVisible(true);
     }
 }
 

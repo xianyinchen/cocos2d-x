@@ -33,6 +33,7 @@
 #include "2d/CCParticleSystemQuad.h"
 #include "2d/CCTMXTiledMap.h"
 #include "platform/CCFileUtils.h"
+#include "platform/CCApplication.h"
 
 #include "editor-support/cocostudio/ActionTimeline/CCActionTimelineCache.h"
 #include "editor-support/cocostudio/ActionTimeline/CCActionTimeline.h"
@@ -275,17 +276,18 @@ Node* CSLoader::createNode(const std::string& filename)
     std::string suffix = path.substr(pos + 1, path.length());
     
     CSLoader* load = CSLoader::getInstance();
-
+    Node* ret = nullptr;
+    
     if (suffix == "csb")
     {
-        return load->createNodeWithFlatBuffersFile(filename);
+        ret = load->createNodeWithFlatBuffersFile(filename);
     }
     else if (suffix == "json" || suffix == "ExportJson")
     {
-        return load->createNodeFromJson(filename);
+        ret = load->createNodeFromJson(filename);
     }
 
-    return nullptr;
+    return ret;
 }
 
 Node* CSLoader::createNode(const std::string &filename, const ccNodeLoadCallback &callback)
@@ -432,7 +434,7 @@ Node* CSLoader::loadNodeWithFile(const std::string& fileName)
     
     // Load animation data from file
     ActionTimelineCache::getInstance()->loadAnimationActionWithContent(fileName, contentStr);
-    
+
     return node;
 }
 
@@ -916,9 +918,7 @@ Node* CSLoader::createNodeWithFlatBuffersFile(const std::string &filename)
 Node* CSLoader::createNodeWithFlatBuffersFile(const std::string &filename, const ccNodeLoadCallback &callback)
 {
     Node* node = nodeWithFlatBuffersFile(filename, callback);
-
     reconstructNestNode(node);
-
     return node;
 }
 

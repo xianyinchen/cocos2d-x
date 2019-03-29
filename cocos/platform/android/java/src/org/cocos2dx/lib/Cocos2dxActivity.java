@@ -51,6 +51,8 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLContext;
 
+import com.oppo.oiface.OifaceManager;
+
 public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelperListener {
     // ===========================================================
     // Constants
@@ -168,6 +170,8 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
         this.setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
+
+        OifaceManager.getInstance();
     }
 
     //native method,call GLViewImpl::getGLContextAttrs() to get the OpenGL ES context attributions

@@ -1018,61 +1018,7 @@ enum
 
 ParticleTests::ParticleTests()
 {
-    ADD_TEST_CASE(ParticleReorder);
-    ADD_TEST_CASE(ParticleBatchHybrid);
-    ADD_TEST_CASE(ParticleBatchMultipleEmitters);
-    ADD_TEST_CASE(DemoFlower);
-    ADD_TEST_CASE(DemoGalaxy);
-    ADD_TEST_CASE(DemoFirework);
-    ADD_TEST_CASE(DemoSpiral);
-    ADD_TEST_CASE(DemoSun);
-    ADD_TEST_CASE(DemoMeteor);
-    ADD_TEST_CASE(DemoFire);
-    ADD_TEST_CASE(DemoSmoke);
-    ADD_TEST_CASE(DemoExplosion);
-    ADD_TEST_CASE(DemoSnow);
-    ADD_TEST_CASE(DemoRain);
-    ADD_TEST_CASE(DemoBigFlower);
-    ADD_TEST_CASE(DemoRotFlower);
-    ADD_TEST_CASE(DemoModernArt);
-    ADD_TEST_CASE(DemoRing);
-    ADD_TEST_CASE(ParallaxParticle);
-    ADD_TEST_CASE(DemoPause);
-    addTestCase("BoilingFoam", [](){return DemoParticleFromFile::create("BoilingFoam");});
-    addTestCase("BurstPipe", [](){return DemoParticleFromFile::create("BurstPipe"); });
-    addTestCase("Comet", [](){return DemoParticleFromFile::create("Comet"); });
-    addTestCase("debian", [](){return DemoParticleFromFile::create("debian"); });
-    addTestCase("ExplodingRing", [](){return DemoParticleFromFile::create("ExplodingRing"); });
-    addTestCase("LavaFlow", [](){return DemoParticleFromFile::create("LavaFlow"); });
-    addTestCase("SpinningPeas", [](){return DemoParticleFromFile::create("SpinningPeas"); });
-    addTestCase("SpookyPeas", [](){return DemoParticleFromFile::create("SpookyPeas"); });
-    addTestCase("Upsidedown", [](){return DemoParticleFromFile::create("Upsidedown"); });
-    addTestCase("Flower", [](){return DemoParticleFromFile::create("Flower"); });
-    addTestCase("Spiral", [](){return DemoParticleFromFile::create("Spiral"); });
-    addTestCase("Galaxy", [](){return DemoParticleFromFile::create("Galaxy"); });
-    addTestCase("Phoenix", [](){return DemoParticleFromFile::create("Phoenix"); });
-    addTestCase("lines", [](){return DemoParticleFromFile::create("lines"); });
-    addTestCase("ButterFly", [](){return DemoParticleFromFile::create("ButterFly"); });
-    addTestCase("ButterFlyYFlipped", [](){return DemoParticleFromFile::create("ButterFlyYFlipped"); });
-    ADD_TEST_CASE(RadiusMode1);
-    ADD_TEST_CASE(RadiusMode2);
-    ADD_TEST_CASE(Issue704);
-    ADD_TEST_CASE(Issue870);
-    ADD_TEST_CASE(Issue1201);
-
-    ADD_TEST_CASE(MultipleParticleSystems);
-    ADD_TEST_CASE(MultipleParticleSystemsBatched);
-    ADD_TEST_CASE(AddAndDeleteParticleSystems);
-    ADD_TEST_CASE(ReorderParticleSystems);
-    ADD_TEST_CASE(PremultipliedAlphaTest);
-    ADD_TEST_CASE(PremultipliedAlphaTest2);
-    ADD_TEST_CASE(Issue3990);
-    ADD_TEST_CASE(ParticleAutoBatching);
-    ADD_TEST_CASE(ParticleVisibleTest);
     ADD_TEST_CASE(ParticleResetTotalParticles);
-
-    ADD_TEST_CASE(ParticleIssue12310);
-    ADD_TEST_CASE(ParticleSpriteFrame);
 }
 
 ParticleDemo::~ParticleDemo(void)
@@ -1111,7 +1057,7 @@ void ParticleDemo::onEnter(void)
     item4->setPosition( Vec2( VisibleRect::left().x, VisibleRect::bottom().y+ 100) );
     item4->setAnchorPoint( Vec2(0,0) );
 
-    addChild( menu, 100 );
+    //addChild( menu, 100 );
 
     auto labelAtlas = LabelAtlas::create("0000", "fps_images.png", 12, 32, '.');
     addChild(labelAtlas, 100, kTagParticleCount);
@@ -2011,6 +1957,9 @@ std::string ParticleAutoBatching::subtitle() const
 //
 void ParticleResetTotalParticles::onEnter()
 {
+    _particleCount = 10;
+    _particleInst = 1;
+    
     ParticleDemo::onEnter();
     
     _color->setColor(Color3B::BLACK);
@@ -2020,21 +1969,36 @@ void ParticleResetTotalParticles::onEnter()
     auto p = ParticleFire::createWithTotalParticles(10);
     this->addChild(p);
     
-    auto add = MenuItemFont::create("add 10 particles",
-                                    [p](Ref*)->void
-                                    {
-                                        p->setTotalParticles(p->getTotalParticles() + 10 );
-                                    });
+    MenuItemFont*add = nullptr;
+    add = MenuItemFont::create("add 10 particles (10)");
+    add->initWithCallback([=](Ref*)->void
+                          {
+                              _particleCount = _particleCount + 10;
+                              char cntStr[256] = {0};
+                              sprintf(cntStr, "add 10 particles (%d)", _particleCount);
+                              add->setString(cntStr);
+                              p->setTotalParticles(p->getTotalParticles() + 10 );
+                          });
     add->setFontSizeObj(20);
     add->setPosition(Vec2(0, 25));
     
-    auto remove = MenuItemFont::create("remove 10 particles",
-                                       [p](Ref*)->void
-                                       {
-                                           int count = p->getTotalParticles() - 10;
-                                           if (count < 0) { count = 0; }
-                                           p->setTotalParticles(count);
-                                       });
+    auto remove = MenuItemFont::create("add 1 instance (1)");
+    remove->initWithCallback([=](Ref*)->void
+                          {
+                              _particleCount = _particleCount + 10;
+                              _particleInst = _particleInst + 1;
+                              char cntStr[256] = {0};
+                              sprintf(cntStr, "add 1 instance (%d)", _particleInst);
+                              remove->setString(cntStr);
+                              
+                              sprintf(cntStr, "add 10 particles (%d)", _particleCount);
+                              add->setString(cntStr);
+                              
+                              auto p2 = ParticleFire::createWithTotalParticles(10);
+                              this->addChild(p2);
+                              p2->setPosition(VisibleRect::center().x + random(0, 600) - 300, VisibleRect::center().y);
+                          });
+    
     remove->setPosition(Vec2(0, -25));
     remove->setFontSizeObj(20);
     

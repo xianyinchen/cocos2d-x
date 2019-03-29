@@ -196,7 +196,7 @@ void TestList::runThisTest()
         });
         autoTestItem->setPosition(Vec2(VisibleRect::right().x - 60, VisibleRect::bottom().y + 50));
 
-        auto menu = Menu::create(closeItem, autoTestItem, nullptr);
+        auto menu = Menu::create(closeItem, nullptr);
         menu->setPosition(Vec2::ZERO);
         scene->addChild(menu, 1);
     }
@@ -390,6 +390,9 @@ float TestCase::getDuration() const
     return 0.2f;
 }
 
+static bool isPause = false;
+static Label* labelTmp = nullptr;
+
 bool TestCase::init()
 {
     if (Scene::init())
@@ -407,8 +410,27 @@ bool TestCase::init()
         _subtitleLabel->setPosition(VisibleRect::center().x, VisibleRect::top().y - 60);
         
         _priorTestItem = MenuItemImage::create(s_pathB1, s_pathB2, CC_CALLBACK_1(TestCase::priorTestCallback, this));
-        _restartTestItem = MenuItemImage::create(s_pathR1, s_pathR2, CC_CALLBACK_1(TestCase::restartTestCallback, this));
-        _nextTestItem = MenuItemImage::create(s_pathF1, s_pathF2, CC_CALLBACK_1(TestCase::nextTestCallback, this));
+        //_restartTestItem = MenuItemImage::create(s_pathR1, s_pathR2, CC_CALLBACK_1(TestCase::restartTestCallback, this));
+        //_nextTestItem = MenuItemImage::create(s_pathF1, s_pathF2, CC_CALLBACK_1(TestCase::nextTestCallback, this));
+        
+        ttfConfig.fontSize = 20;
+        
+        auto backLabel3 = Label::createWithTTF(ttfConfig, "StopFPS");
+        labelTmp = backLabel3;
+        _nextTestItem = MenuItemLabel::create(backLabel3, [&](Ref*){
+            isPause = !isPause;
+            
+            if (isPause)
+                labelTmp->setString("StartFPS");
+            else
+                labelTmp->setString("StopFPS");
+                
+            CC_OPTIMIZE_PAUSE(isPause);
+        });
+        
+        ttfConfig.fontSize = 20;
+        auto backLabel2 = Label::createWithTTF(ttfConfig, "Restart");
+        _restartTestItem = MenuItemLabel::create(backLabel2, CC_CALLBACK_1(TestCase::restartTestCallback, this));
         
         ttfConfig.fontSize = 20;
         auto backLabel = Label::createWithTTF(ttfConfig, "Back");
@@ -418,9 +440,9 @@ bool TestCase::init()
 
         menu->setPosition(Vec2::ZERO);
         _priorTestItem->setPosition(VisibleRect::center().x - _restartTestItem->getContentSize().width * 2, VisibleRect::bottom().y + _restartTestItem->getContentSize().height / 2);
-        _restartTestItem->setPosition(VisibleRect::center().x, VisibleRect::bottom().y + _restartTestItem->getContentSize().height / 2);
-        _nextTestItem->setPosition(VisibleRect::center().x + _restartTestItem->getContentSize().width * 2, VisibleRect::bottom().y + _restartTestItem->getContentSize().height / 2);
-        backItem->setPosition(Vec2(VisibleRect::right().x - 50, VisibleRect::bottom().y + 25));
+        _restartTestItem->setPosition(VisibleRect::center().x, VisibleRect::bottom().y + _restartTestItem->getContentSize().height / 2 + 25);
+        _nextTestItem->setPosition(VisibleRect::right().x - 150, VisibleRect::bottom().y + _restartTestItem->getContentSize().height / 2 + 25);
+        backItem->setPosition(Vec2(VisibleRect::right().x - 50, VisibleRect::bottom().y + _restartTestItem->getContentSize().height / 2 + 25));
 
         addChild(menu, 9999);
 
@@ -441,7 +463,7 @@ void TestCase::onEnter()
 
     if (_testSuite)
     {
-        _titleLabel->setString(StringUtils::format("%d", static_cast<int>(_testSuite->getCurrTestIndex() + 1)) + ":" + title());
+        _titleLabel->setString(title());
     }
     else
     {
@@ -452,8 +474,8 @@ void TestCase::onEnter()
     if (_testSuite && _testSuite->getChildTestCount() < 2)
     {
         _priorTestItem->setVisible(false);
-        _nextTestItem->setVisible(false);
-        _restartTestItem->setVisible(false);
+        _nextTestItem->setVisible(true);
+        _restartTestItem->setVisible(true);
     }
 }
 

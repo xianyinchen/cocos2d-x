@@ -30,6 +30,11 @@
 #include "extensions/cocos-ext.h"
 #include "../BaseTest.h"
 
+#include "cocos2d.h"
+#include "cocostudio/CocoStudio.h"
+
+USING_NS_CC;
+USING_NS_CC_EXT;
 
 DEFINE_TEST_SUITE(ShaderTests);
 
@@ -147,7 +152,7 @@ public:
     virtual void setPosition(const cocos2d::Vec2 &newPosition) override;
     virtual void draw(cocos2d::Renderer* renderer, const cocos2d::Mat4& transform, uint32_t flags) override;
 
-protected:
+//protected:
     ShaderNode();
     ~ShaderNode();
 
@@ -172,6 +177,8 @@ public:
     
     virtual std::string title() const override;
     virtual std::string subtitle() const override;
+
+    void onTouchesEnded(const std::vector<Touch*>& touches, Event* /*event*/);
     virtual bool init() override;
 };
 

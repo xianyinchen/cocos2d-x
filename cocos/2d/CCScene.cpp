@@ -34,6 +34,7 @@ THE SOFTWARE.
 #include "base/ccUTF8.h"
 #include "renderer/CCRenderer.h"
 #include "renderer/CCFrameBuffer.h"
+#include "platform/CCApplication.h"
 
 #if CC_USE_PHYSICS
 #include "physics/CCPhysicsWorld.h"
@@ -76,6 +77,14 @@ Scene::Scene()
     _event->retain();
     
     Camera::_visitingCamera = nullptr;
+
+    CC_OPTIMIZE_ITEM("load_scene", 1, false);
+}
+
+void Scene::onEnter()
+{
+    Node::onEnter();
+    CC_OPTIMIZE_ITEM("load_scene", 0, false);
 }
 
 Scene::~Scene()

@@ -33,27 +33,7 @@ using namespace cocos2d::experimental;
 
 AudioEngineTests::AudioEngineTests()
 {
-    ADD_TEST_CASE(AudioIssue18597Test);
     ADD_TEST_CASE(AudioIssue11143Test);
-    ADD_TEST_CASE(AudioControlTest);
-    ADD_TEST_CASE(AudioLoadTest);
-    ADD_TEST_CASE(PlaySimultaneouslyTest);
-    ADD_TEST_CASE(AudioProfileTest);
-    ADD_TEST_CASE(InvalidAudioFileTest);
-    ADD_TEST_CASE(LargeAudioFileTest);
-    ADD_TEST_CASE(AudioPerformanceTest);
-    ADD_TEST_CASE(AudioSmallFileTest);
-    ADD_TEST_CASE(AudioSmallFile2Test);
-    ADD_TEST_CASE(AudioSmallFile3Test);
-    ADD_TEST_CASE(AudioPauseResumeAfterPlay);
-    ADD_TEST_CASE(AudioPreloadSameFileMultipleTimes);
-    ADD_TEST_CASE(AudioPlayFileInWritablePath);
-    ADD_TEST_CASE(AudioIssue16938Test);
-    ADD_TEST_CASE(AudioPlayInFinishedCB);
-    ADD_TEST_CASE(AudioUncacheInFinishedCB);
-    
-    //FIXME: Please keep AudioSwitchStateTest to the last position since this test case doesn't work well on each platforms.
-    ADD_TEST_CASE(AudioSwitchStateTest);
 }
 
 namespace {
@@ -706,42 +686,67 @@ std::string AudioIssue18597Test::subtitle() const
     return "no crash for more than 10 minutes";
 }
 
+void AudioIssue11143Test::onExit()
+{
+    AudioEngineTestDemo::onExit();
+    AudioEngine::stopAll();
+}
+
 bool AudioIssue11143Test::init()
 {
     if (AudioEngineTestDemo::init())
     {
-        auto& layerSize = this->getContentSize();
-
-        auto playItem = TextButton::create("play", [](TextButton* button){
-            AudioEngine::play2d("audio/SoundEffectsFX009/FX082.mp3", true);
-            AudioEngine::stopAll();
-            
-            auto audioId = AudioEngine::play2d("audio/SoundEffectsFX009/FX082.mp3", true);
-            char key[100] = {0};
-            sprintf(key, "play another sound %d", audioId);
-            button->scheduleOnce([audioId](float dt){
-                AudioEngine::stop(audioId);
-                AudioEngine::play2d("audio/SoundEffectsFX009/FX083.mp3");
-            }, 0.3f, key);
-
-        });
-        playItem->setPosition(layerSize.width * 0.5f, layerSize.height * 0.5f);
-        addChild(playItem);
-
+        audio_count = 0;
+        
+        auto label = LabelTTF::create("audio count 0", "Marker Felt", 30);
+        addChild(label, 4, 4);
+        label->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/2 + 50);
+        
+        auto touchListener = EventListenerTouchAllAtOnce::create();
+        touchListener->onTouchesEnded = CC_CALLBACK_2(AudioIssue11143Test::onTouchesEnded, this);
+        _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+        
         return true;
     }
 
     return false;
 }
 
+void AudioIssue11143Test::onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event  *event){
+    auto& layerSize = this->getContentSize();
+    
+    auto audioId = AudioEngine::play2d("audio/SoundEffectsFX009/FX082.mp3", true);
+    char count[100] = {0};
+    
+    this->audio_count = this->audio_count + 1;
+    sprintf(count, "audio count %d", audio_count);
+    
+    auto _ll = (LabelTTF*)this->getChildByTag(4);
+    _ll->setString(count);
+    
+    char key[100] = {0};
+    sprintf(key, "play another sound %d", audioId);
+    this->scheduleOnce([audioId,this](float dt){
+        AudioEngine::stop(audioId);
+        
+        char count[100] = {0};
+        
+        this->audio_count = this->audio_count - 1;
+        sprintf(count, "audio count %d", audio_count);
+        
+        auto _ll = (LabelTTF*)this->getChildByTag(4);
+        _ll->setString(count);
+    }, 10.0f, key);
+}
+
 std::string AudioIssue11143Test::title() const
 {
-    return "Test for issue 11143";
+    return "Audio Test";
 }
 
 std::string AudioIssue11143Test::subtitle() const
 {
-    return "2 seconds after first sound play,you should hear another sound.";
+    return "click to play, auto release after 10s";
 }
 
 // Enable profiles for this file

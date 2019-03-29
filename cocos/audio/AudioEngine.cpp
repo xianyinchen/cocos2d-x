@@ -569,7 +569,12 @@ void AudioEngine::addTask(const std::function<void()>& task)
 
 int AudioEngine::getPlayingAudioCount()
 {
-    return static_cast<int>(_audioIDInfoMap.size());
+    int count = 0;
+    std::unordered_map<int, AudioInfo>::iterator itr = _audioIDInfoMap.begin();
+    for (; itr != _audioIDInfoMap.end(); ++itr){
+        count++;
+    }
+    return count;
 }
 
 void AudioEngine::setEnabled(bool isEnabled)

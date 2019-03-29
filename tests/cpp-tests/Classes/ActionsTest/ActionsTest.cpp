@@ -39,67 +39,11 @@ using namespace cocos2d::ui;
 ActionsTests::ActionsTests()
 {
     ADD_TEST_CASE(ActionMove);
-    ADD_TEST_CASE(ActionMove3D);
-    ADD_TEST_CASE(ActionRotate);
-    ADD_TEST_CASE(ActionRotateBy3D);
-    ADD_TEST_CASE(ActionScale);
-    ADD_TEST_CASE(ActionSkew);
-    ADD_TEST_CASE(ActionRotationalSkew);
-    ADD_TEST_CASE(ActionRotationalSkewVSStandardSkew);
-    ADD_TEST_CASE(ActionSkewRotateScale);
-    ADD_TEST_CASE(ActionJump);
-    ADD_TEST_CASE(ActionCardinalSpline);
-    ADD_TEST_CASE(ActionCatmullRom);
-    ADD_TEST_CASE(ActionBezier);
-    ADD_TEST_CASE(ActionBlink);
-    ADD_TEST_CASE(ActionFade);
-    ADD_TEST_CASE(ActionTint);
-    ADD_TEST_CASE(ActionAnimate);
-    ADD_TEST_CASE(ActionSequence);
-    ADD_TEST_CASE(ActionSequence2);
-    ADD_TEST_CASE(ActionSequence3);
-    ADD_TEST_CASE(ActionRemoveSelf);
-    ADD_TEST_CASE(ActionSpawn);
-    ADD_TEST_CASE(ActionSpawn2);
-    ADD_TEST_CASE(ActionReverse);
-    ADD_TEST_CASE(ActionDelayTime);
-    ADD_TEST_CASE(ActionRepeat);
-    ADD_TEST_CASE(ActionRepeatForever);
-    ADD_TEST_CASE(ActionRotateToRepeat);
-    ADD_TEST_CASE(ActionCallFunction);
-    ADD_TEST_CASE(ActionCallFuncN);
-    ADD_TEST_CASE(ActionCallFuncND);
-    ADD_TEST_CASE(ActionReverseSequence);
-    ADD_TEST_CASE(ActionReverseSequence2);
-    ADD_TEST_CASE(ActionOrbit);
-    ADD_TEST_CASE(ActionFollow);
-    ADD_TEST_CASE(ActionFollowWithOffset);
-    ADD_TEST_CASE(ActionTargeted);
-    ADD_TEST_CASE(ActionTargetedReverse);
-    ADD_TEST_CASE(ActionMoveStacked);
-    ADD_TEST_CASE(ActionMoveJumpStacked);
-    ADD_TEST_CASE(ActionMoveBezierStacked);
-    ADD_TEST_CASE(ActionCardinalSplineStacked);
-    ADD_TEST_CASE(ActionCatmullRomStacked);
-    ADD_TEST_CASE(PauseResumeActions);
-    ADD_TEST_CASE(ActionResize);
-    ADD_TEST_CASE(Issue1305);
-    ADD_TEST_CASE(Issue1305_2);
-    ADD_TEST_CASE(Issue1288);
-    ADD_TEST_CASE(Issue1288_2);
-    ADD_TEST_CASE(Issue1327);
-    ADD_TEST_CASE(Issue1398);
-    ADD_TEST_CASE(Issue2599)
-    ADD_TEST_CASE(ActionFloatTest);
-    ADD_TEST_CASE(Issue14936_1);
-    ADD_TEST_CASE(Issue14936_2);
-    ADD_TEST_CASE(SequenceWithFinalInstant);
-    ADD_TEST_CASE(Issue18003);
 }
 
 std::string ActionsDemo::title() const
 {
-    return "ActionsTest";
+    return "Actions Test";
 }
 
 void ActionsDemo::onEnter()
@@ -123,6 +67,78 @@ void ActionsDemo::onEnter()
     _grossini->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/3);
     _tamara->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height*2/3);
     _kathia->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/2);
+    
+    auto touchListener = EventListenerTouchAllAtOnce::create();
+    touchListener->onTouchesEnded = CC_CALLBACK_2(ActionsDemo::onTouchesEnded, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
+    
+    auto label = LabelTTF::create("body count 0", "Marker Felt", 30);
+    addChild(label, 4, 4);
+    label->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/2);
+    
+    _objectCount = 0;
+}
+
+void ActionsDemo::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
+{
+    char iCnt[256] = {0};
+    auto label = (LabelTTF*)getChildByTag(4);
+    
+    for (int i = 0; i < 3; ++i) {
+        //Add a new body/atlas sprite at the touched location
+        // Or you can create an sprite using a filename. only PNG is supported now. Probably TIFF too
+        _grossini = Sprite::create(s_pathGrossini);
+        _grossini->retain();
+        
+        _tamara = Sprite::create(s_pathSister1);
+        _tamara->retain();
+        
+        _kathia = Sprite::create(s_pathSister2);
+        _kathia->retain();
+        
+        addChild(_grossini, 1);
+        addChild(_tamara, 2);
+        addChild(_kathia, 3);
+
+        _grossini->setPosition(VisibleRect::center().x - VisibleRect::getVisibleRect().size.width/3, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/3);
+        _tamara->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height*2/3);
+        _kathia->setPosition(VisibleRect::center().x + VisibleRect::getVisibleRect().size.width/3, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/2);
+        
+        auto s = Director::getInstance()->getWinSize();
+        auto actionByR = RepeatForever::create(Sequence::create(DelayTime::create(random(0, 2)),
+                                                                RotateBy::create(2, 90),
+                                                                RotateBy::create(2, 90),
+                                                                nullptr));
+        auto actionByS = RepeatForever::create(Sequence::create(DelayTime::create(random(0, 2)),
+                                                                ScaleTo::create(2, 1),
+                                                                ScaleTo::create(2, 0),
+                                                                nullptr));
+        auto actionByM = RepeatForever::create(Sequence::create(DelayTime::create(random(0, 2)),
+                                                                MoveBy::create(2, Vec2(80,80)),
+                                                                MoveBy::create(2, Vec2(-80,-80)),
+                                                                nullptr));
+
+        _tamara->runAction(Sequence::create(CallFunc::create([=](){
+            sprintf((char*)iCnt, "body count %d", ++_objectCount);
+            label->setString(iCnt);
+            
+        }), DelayTime::create(random(0, 2)), nullptr));
+        _tamara->runAction(actionByS);
+        
+        _grossini->runAction(Sequence::create(CallFunc::create([=](){
+            sprintf((char*)iCnt, "body count %d", ++_objectCount);
+            label->setString(iCnt);
+            
+        }), DelayTime::create(random(0, 2)), nullptr));
+        _grossini->runAction(actionByM);
+        
+        _kathia->runAction(Sequence::create(CallFunc::create([=](){
+            sprintf((char*)iCnt, "body count %d", ++_objectCount);
+            label->setString(iCnt);
+            
+        }), DelayTime::create(random(0, 2)), nullptr));
+        _kathia->runAction(actionByR);
+    }
 }
 
 void ActionsDemo::onExit()
@@ -212,7 +228,7 @@ void ActionMove::onEnter()
 
 std::string ActionMove::subtitle() const
 {
-    return "MoveTo / MoveBy";
+    return "click to add more sprite";
 }
 
 //------------------------------------------------------------------

@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include "editor-support/cocostudio/CCDisplayManager.h"
 
 using namespace cocos2d;
+static int __boneCounts = 0;
 
 namespace cocostudio {
 
@@ -50,7 +51,6 @@ Bone *Bone::create()
 
 Bone *Bone::create(const std::string& name)
 {
-
     Bone *pBone = new (std::nothrow) Bone();
     if (pBone && pBone->init(name))
     {
@@ -60,7 +60,11 @@ Bone *Bone::create(const std::string& name)
     CC_SAFE_DELETE(pBone);
     return nullptr;
 }
-
+    
+ssize_t Bone::getAllBoneCount(){
+    return __boneCounts;
+}
+    
 Bone::Bone()
 {
     _tweenData = nullptr;
@@ -79,6 +83,8 @@ Bone::Bone()
 
     _armatureParentBone = nullptr;
     _dataVersion = 0;
+    
+    __boneCounts = __boneCounts + 1;
 }
 
 
@@ -90,8 +96,9 @@ Bone::~Bone(void)
     CC_SAFE_DELETE(_worldInfo);
 
     CC_SAFE_RELEASE_NULL(_boneData);
-
     CC_SAFE_RELEASE(_childArmature);
+    
+    __boneCounts = __boneCounts - 1;
 }
 
 bool Bone::init()

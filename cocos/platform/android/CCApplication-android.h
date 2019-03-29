@@ -105,6 +105,20 @@ public:
     */
     virtual void applicationScreenSizeChanged(int newWidth, int newHeight);
 
+    /**
+     @brief send optimization codes for devices.
+     @param thing
+     @param value
+     */
+    virtual void optimiseEvent(const char* thing, const float value, const bool force = false) override;
+
+    /**
+     @brief stop frame optimization codes for devices.
+     * @js NA
+     * @lua NA
+     */
+    virtual void pauseFrameEvent(const bool isTrue);
+
 protected:
     static Application * sm_pSharedApplication;
 };

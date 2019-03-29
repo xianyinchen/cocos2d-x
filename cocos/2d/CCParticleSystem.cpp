@@ -186,6 +186,7 @@ void ParticleData::release()
     CC_SAFE_FREE(modeB.radius);
 }
 
+static ssize_t __allParticleCount = 0;
 Vector<ParticleSystem*> ParticleSystem::__allInstances;
 float ParticleSystem::__totalParticleCountFactor = 1.0f;
 
@@ -267,10 +268,14 @@ ParticleSystem* ParticleSystem::createWithTotalParticles(int numberOfParticles)
     return ret;
 }
 
-// static
 Vector<ParticleSystem*>& ParticleSystem::getAllParticleSystems()
 {
     return __allInstances;
+}
+
+ssize_t ParticleSystem::getAllParticleCount()
+{
+    return __allParticleCount;
 }
 
 void ParticleSystem::setTotalParticleCountFactor(float factor)
@@ -616,6 +621,7 @@ void ParticleSystem::addParticles(int count)
 
     int start = _particleCount;
     _particleCount += count;
+    __allParticleCount += count;
     
     //life
     for (int i = start; i < _particleCount ; ++i)
@@ -836,6 +842,8 @@ void ParticleSystem::onExit()
     {
         __allInstances.erase(iter);
     }
+    
+    __allParticleCount -= _particleCount;
 }
 
 void ParticleSystem::stopSystem()
@@ -905,6 +913,7 @@ void ParticleSystem::update(float dt)
                 while (j > 0 && _particleData.timeToLive[j] <= 0)
                 {
                     _particleCount--;
+                    __allParticleCount--;
                     j--;
                 }
                 _particleData.copyParticle(i, _particleCount - 1);
@@ -917,6 +926,7 @@ void ParticleSystem::update(float dt)
                     _particleData.atlasIndex[_particleCount - 1] = currentIndex;
                 }
                 --_particleCount;
+                --__allParticleCount;
                 if( _particleCount == 0 && _isAutoRemoveOnFinish )
                 {
                     this->unscheduleUpdate();

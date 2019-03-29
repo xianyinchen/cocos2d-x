@@ -43,6 +43,7 @@ THE SOFTWARE.
 #include "2d/CCTransition.h"
 #include "2d/CCFontFreeType.h"
 #include "2d/CCLabelAtlas.h"
+#include "2d/CCParticleSystem.h"
 #include "renderer/CCGLProgramCache.h"
 #include "renderer/CCGLProgramStateCache.h"
 #include "renderer/CCTextureCache.h"
@@ -63,6 +64,8 @@ THE SOFTWARE.
 #include "base/CCAsyncTaskPool.h"
 #include "base/ObjectFactory.h"
 #include "platform/CCApplication.h"
+#include "audio/include/AudioEngine.h"
+#include "editor-support/cocostudio/CCBone.h"
 
 #if CC_ENABLE_SCRIPT_BINDING
 #include "base/CCScriptSupport.h"
@@ -208,7 +211,8 @@ void Director::setDefaultValues(void)
     // default FPS
     double fps = conf->getValue("cocos2d.x.fps", Value(kDefaultFPS)).asDouble();
     _oldAnimationInterval = _animationInterval = 1.0 / fps;
-
+    CC_OPTIMIZE_ITEM("default_fps", fps, true);
+    
     // Display FPS
     _displayStats = conf->getValue("cocos2d.x.display_fps", Value(false)).asBool();
 
@@ -310,6 +314,17 @@ void Director::drawScene()
         showStats();
 #endif
     }
+    
+    CC_OPTIMIZE_ITEM("current_fps", 1.0f/_deltaTime, true);
+    CC_OPTIMIZE_ITEM("render_time", _deltaTime, true);
+    CC_OPTIMIZE_ITEM("draw_call", _renderer->getDrawnBatches(), true);
+    CC_OPTIMIZE_ITEM("Vertice_count", _renderer->getDrawnVertices(), true);
+    CC_OPTIMIZE_ITEM("transform_count", Node::getTransformNodeCount(), true);
+    CC_OPTIMIZE_ITEM("node_count", Node::getAttachedNodeCount(), true);
+    CC_OPTIMIZE_ITEM("action_count", getActionManager()->getNumberOfRunningActions(), true);
+    CC_OPTIMIZE_ITEM("particle_count", ParticleSystem::getAllParticleCount(), true);
+    CC_OPTIMIZE_ITEM("audio_instances", cocos2d::experimental::AudioEngine::getPlayingAudioCount(), true);
+    Node::resetTransformNodeCount();
     
     _renderer->render();
 

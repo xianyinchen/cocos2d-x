@@ -27,15 +27,7 @@
 
 #include "../BaseTest.h"
 
-class UITests : public TestList
-{
-public:
-    UITests();
-    ~UITests();
-
-private:
-
-};
+DEFINE_TEST_SUITE(UITests);
 
 
 #endif /* defined(__cocos2d_tests__UITest__) */

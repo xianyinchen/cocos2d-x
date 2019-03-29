@@ -1813,8 +1813,10 @@ void ScriptingCore::garbageCollect()
     // twice: yep, call it twice since this is a generational GC
     // and we want to collect as much as possible when this is being called
     // from replaceScene().
+    CC_OPTIMIZE_ITEM("gc", 1, false);
     JS_GC(runtime);
     JS_GC(runtime);
+    CC_OPTIMIZE_ITEM("gc", 0, false);
 #endif
 }
 

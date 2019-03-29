@@ -58,6 +58,7 @@ private:
 #endif
     cpSpace* _space; // strong ref
     cpShape* _walls[4];
+    ssize_t _count;
 };
 
 DEFINE_TEST_SUITE(ChipmunkTests);

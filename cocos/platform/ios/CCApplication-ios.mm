@@ -146,6 +146,18 @@ void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {
 
 }
 
+static bool _stopFPS = false;
+
+void Application::optimiseEvent(const char* thing, const float value, const bool isFPS){
+    if (_stopFPS && isFPS)
+        return;
+    
+    printf("%s:%f \n", thing, value);
+}
+
+void Application::pauseFrameEvent(const bool isTrue){
+    _stopFPS = isTrue;
+}
 NS_CC_END
 
 #endif // CC_PLATFORM_IOS

@@ -79,6 +79,17 @@ CC_DEPRECATED_ATTRIBUTE static __TYPE__* node() \
     } \
 }
 
+/** @def CC_OPTIMIZE_ITEM
+ * enable optimization for huawei.
+ */
+#if true //(CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+#define CC_OPTIMIZE_ITEM(itemName, itemValue, isFPS) Application::getInstance()->optimiseEvent(itemName, itemValue, isFPS)
+#define CC_OPTIMIZE_PAUSE(isTrue) Application::getInstance()->pauseFrameEvent(isTrue)
+#else
+#define CC_OPTIMIZE_ITEM(itemName, itemValue) do{}while(0)
+#define CC_OPTIMIZE_PAUSE(isTrue) do{}while(0)
+#endif
+
 /** @def CC_ENABLE_CACHE_TEXTURE_DATA
  * Enable it if you want to cache the texture data.
  * Not enabling for Emscripten any more -- doesn't seem necessary and don't want

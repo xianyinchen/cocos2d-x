@@ -85,14 +85,12 @@ bool AppDelegate::applicationDidFinishLaunching()
         searchPaths.push_back("ccs-res/hd");
         searchPaths.push_back("ccs-res");
         searchPaths.push_back("Manifests");
-        director->setContentScaleFactor(resourceSize.height/designSize.height);
-
         searchPaths.push_back("hd/ActionTimeline");
+        director->setContentScaleFactor(resourceSize.height/designSize.height);
     }
     else
     {
         searchPaths.push_back("ccs-res");
-        
         searchPaths.push_back("ActionTimeline");
     }
     

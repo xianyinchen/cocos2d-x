@@ -97,8 +97,8 @@ CC_CONSTRUCTOR_ACCESS:
 
 protected:
     cocos2d::MenuItemImage* _priorTestItem;
-    cocos2d::MenuItemImage* _restartTestItem;
-    cocos2d::MenuItemImage* _nextTestItem;
+    cocos2d::MenuItemLabel* _restartTestItem;
+    cocos2d::MenuItemLabel* _nextTestItem;
 
     cocos2d::Label* _titleLabel;
     cocos2d::Label* _subtitleLabel;

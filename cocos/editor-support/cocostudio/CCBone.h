@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
 Copyright (c) 2013-2016 Chukong Technologies Inc.
 Copyright (c) 2017-2018 Xiamen Yaji Software Co., Ltd.
 
@@ -54,7 +54,14 @@ public:
      * @return A initialized bone which is marked as "autorelease".
      */
     static Bone *create(const std::string& name);
-
+    /**
+     * Get all bones count.
+     *
+     * @param  name If name is not null, then set name to the bone's name
+     * @return A initialized bone which is marked as "autorelease".
+     */
+    static ssize_t getAllBoneCount();
+    
 public:
     /**
      *  @js ctor

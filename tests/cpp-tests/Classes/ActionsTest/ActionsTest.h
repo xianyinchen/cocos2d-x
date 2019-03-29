@@ -27,7 +27,9 @@
 #ifndef _ActionsTest_H_
 #define _ActionsTest_H_
 
+#include "cocos2d.h"
 #include "../BaseTest.h"
+#include "extensions/cocos-ext.h"
 
 DEFINE_TEST_SUITE(ActionsTests);
 
@@ -37,10 +39,12 @@ protected:
     cocos2d::Sprite*    _grossini;
     cocos2d::Sprite*    _tamara;
     cocos2d::Sprite*    _kathia;
+    int _objectCount;
+    
 public:
     virtual void onEnter() override;
     virtual void onExit() override;
-
+    void onTouchesEnded(const std::vector<cocos2d::Touch*>& touches, cocos2d::Event* event);
     void centerSprites(unsigned int numberOfSprites);
     void alignSpritesLeft(unsigned int numberOfSprites);
     virtual std::string title() const override;

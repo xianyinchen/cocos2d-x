@@ -30,6 +30,7 @@
 #include "2d/CCScene.h"
 #include "2d/CCSpriteFrameCache.h"
 #include "renderer/CCTextureCache.h"
+#include "platform/CCApplication.h"
 
 #include "editor-support/cocosbuilder/CCBReader.h"
 #include "editor-support/cocosbuilder/CCNodeLoader.h"
@@ -238,6 +239,7 @@ Node* CCBReader::readNodeGraphFromFile(const char *pCCBFileName, Ref *pOwner, co
 
     std::string strCCBFileName(pCCBFileName);
     std::string strSuffix(".ccbi");
+    
     // Add ccbi suffix
     if (!CCBReader::endsWith(strCCBFileName.c_str(), strSuffix.c_str()))
     {
@@ -306,7 +308,6 @@ Scene* CCBReader::createSceneWithNodeGraphFromFile(const char *pCCBFileName, Ref
     Node *pNode = readNodeGraphFromFile(pCCBFileName, pOwner, parentSize);
     Scene *pScene = Scene::create();
     pScene->addChild(pNode);
-    
     return pScene;
 }
 

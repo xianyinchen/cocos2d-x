@@ -63,6 +63,10 @@ ChipmunkTest::ChipmunkTest()
     label->setPosition(VisibleRect::center().x, VisibleRect::top().y - 30);
     this->addChild(label, -1);
 
+    auto label2 = LabelTTF::create("body count 0", "Marker Felt", 30);
+    addChild(label2, 4, 4);
+    label2->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/2);
+    
     // reset button
     createResetButton();
 
@@ -249,11 +253,19 @@ void ChipmunkTest::addNewSpriteAtPosition(cocos2d::Vec2 pos)
 
     sprite->setCPBody(body);
     sprite->setPosition(pos);
+    
+    _count = _count + 1;
+    char text[256] = {0};
+    auto nodeLabel = (LabelTTF*)getChildByTag(4);
+    
+    sprintf(text, "body count %d", _count);
+    nodeLabel->setString(text);
 #endif
 }
 
 void ChipmunkTest::onEnter()
 {
+    _count = 0;
     TestCase::onEnter();
 }
 
