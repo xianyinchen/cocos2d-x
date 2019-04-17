@@ -138,7 +138,7 @@ void Application::applicationScreenSizeChanged(int newWidth, int newHeight) {
 
 }
 
-static bool _stopFPS = false;
+static bool _stopFPS = true;
 
 
 void Application::optimiseEvent(const char* thing, const float value, const bool isFPS){

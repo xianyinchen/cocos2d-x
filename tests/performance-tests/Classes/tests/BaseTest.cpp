@@ -465,6 +465,8 @@ void TestCase::nextTestCallback(Ref* sender)
 {
     if (_testSuite)
     {
+        auto _node = getChildByTag(99999);
+        _node->removeFromParent();
         _testSuite->enterNextTest();
     }
 }

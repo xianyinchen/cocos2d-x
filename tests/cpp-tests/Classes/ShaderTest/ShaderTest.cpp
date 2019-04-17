@@ -651,23 +651,37 @@ bool ShaderLensFlare::init()
 
 void ShaderLensFlare::onTouchesEnded(const std::vector<Touch*>& touches, Event* event)
 {
-    auto label = (LabelTTF*)getChildByTag(3);
+    TTFConfig ttfConfig("fonts/arial.ttf", 26);
     
-    std::chrono::steady_clock::time_point tt = std::chrono::steady_clock::now();
+    auto backLabel2 = Label::createWithTTF(ttfConfig, "load ...");
     
-    CC_OPTIMIZE_ITEM("shader_compile", 1, false);
-    for (int i=20; i>0; --i){
-        GLProgramCache::destroyInstance();
-        GLProgramCache::getInstance();
-    }
-    CC_OPTIMIZE_ITEM("shader_compile", 0, false);
+    backLabel2->setPosition(VisibleRect::center().x, VisibleRect::center().y + backLabel2->getContentSize().height / 2 + 25);
+    addChild(backLabel2);
     
-    std::chrono::steady_clock::time_point tt2 = std::chrono::steady_clock::now();
-    long duration = static_cast<long>(std::chrono::duration_cast<std::chrono::microseconds>(tt2 - tt).count());
+    backLabel2->setColor(Color3B(255,0,0));
+    backLabel2->setTag(99999);
     
-    char tttt[256] = {0};
-    sprintf(tttt, "laod time %f", ((double)duration)/1000000);
-    label->setString(tttt);
+    this->runAction(Sequence::create(DelayTime::create(0.1f), CallFunc::create([=](){
+        auto label = (LabelTTF*)getChildByTag(3);
+        
+        std::chrono::steady_clock::time_point tt = std::chrono::steady_clock::now();
+        
+        CC_OPTIMIZE_ITEM("shader_compile", 1, false);
+        for (int i=20; i>0; --i){
+            GLProgramCache::destroyInstance();
+            GLProgramCache::getInstance();
+        }
+        CC_OPTIMIZE_ITEM("shader_compile", 0, false);
+        
+        std::chrono::steady_clock::time_point tt2 = std::chrono::steady_clock::now();
+        long duration = static_cast<long>(std::chrono::duration_cast<std::chrono::microseconds>(tt2 - tt).count());
+        
+        char tttt[256] = {0};
+        sprintf(tttt, "laod time %f", ((double)duration)/1000000);
+        label->setString(tttt);
+        
+        removeChildByTag(99999);
+    }), nullptr));
 }
 
 //

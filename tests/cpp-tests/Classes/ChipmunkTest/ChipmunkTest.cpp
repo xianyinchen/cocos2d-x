@@ -47,6 +47,8 @@ enum {
 
 ChipmunkTest::ChipmunkTest()
 {
+    _count = 0;
+    
 #if CC_ENABLE_CHIPMUNK_INTEGRATION      
     // enable events
 
@@ -105,7 +107,6 @@ ChipmunkTest::ChipmunkTest()
     addChild(label);
     
 #endif
-    
 }
 
 void ChipmunkTest::toggleDebugCallback(Ref* sender)
@@ -203,12 +204,14 @@ void ChipmunkTest::update(float delta)
 
 void ChipmunkTest::createResetButton()
 {
+    /*
     auto reset = MenuItemImage::create("Images/r1.png", "Images/r2.png", CC_CALLBACK_1(ChipmunkTest::reset, this));
 
     auto menu = Menu::create(reset, nullptr);
 
     menu->setPosition(VisibleRect::center().x, VisibleRect::bottom().y + 30);
     this->addChild(menu, -1);
+     */
 }
 
 void ChipmunkTest::reset(Ref* sender)
@@ -265,7 +268,6 @@ void ChipmunkTest::addNewSpriteAtPosition(cocos2d::Vec2 pos)
 
 void ChipmunkTest::onEnter()
 {
-    _count = 0;
     TestCase::onEnter();
 }
 

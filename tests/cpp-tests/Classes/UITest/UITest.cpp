@@ -39,7 +39,9 @@ public:
     UILoader()
         :TestCase()
     {
-        auto label = LabelTTF::create("laod time 0", "Marker Felt", 30);
+        static int testCount = 0;
+        
+        auto label = LabelTTF::create("load finish 0", "Marker Felt", 30);
         label->setColor(Color3B(255,0,0));
         addChild(label, 4, 4);
         label->setPosition(VisibleRect::center().x, VisibleRect::bottom().y+VisibleRect::getVisibleRect().size.height/2);
@@ -68,7 +70,9 @@ public:
         auto nodeLabel = (LabelTTF*)getChildByTag(4);
         
         char tttt[256] = {0};
-        sprintf(tttt, "laod time %f", ((double)duration)/1000000);
+        sprintf(tttt, "laod finish %d", testCount);
+        
+        testCount = testCount + 1;
         nodeLabel->setString(tttt);
     }
     

@@ -1061,7 +1061,7 @@ void ParticleDemo::onEnter(void)
 
     auto labelAtlas = LabelAtlas::create("0000", "fps_images.png", 12, 32, '.');
     addChild(labelAtlas, 100, kTagParticleCount);
-    labelAtlas->setPosition(Vec2(s.width-66,50));
+    labelAtlas->setPosition(Vec2(s.width-66,5000));
 
     // moving background
     _background = Sprite::create(s_back3);

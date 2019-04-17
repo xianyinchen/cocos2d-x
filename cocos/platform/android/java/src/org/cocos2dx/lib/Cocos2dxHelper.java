@@ -68,7 +68,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import com.oppo.oiface.OifaceManager;
+import com.oppo.oiface.engine.OifaceGameEngineManager;
 
 public class Cocos2dxHelper {
     // ===========================================================
@@ -838,6 +838,6 @@ public class Cocos2dxHelper {
     public static void optimiseEvent(String thing, float value){
         String jsonStr = "{\"" + thing + "\":" + String.valueOf(value) + "}";
         //Log.e(TAG, "optimiseEvent:" + jsonStr);
-        OifaceManager.getInstance().updateGameEngineInfo(jsonStr);
+        OifaceGameEngineManager.getInstance().updateGameEngineInfo(jsonStr);
     }
 }

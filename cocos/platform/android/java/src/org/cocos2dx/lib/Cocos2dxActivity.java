@@ -51,7 +51,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.egl.EGLDisplay;
 import javax.microedition.khronos.egl.EGLContext;
 
-import com.oppo.oiface.OifaceManager;
+import com.oppo.oiface.engine.OifaceGameEngineManager;
 
 public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelperListener {
     // ===========================================================
@@ -171,7 +171,7 @@ public abstract class Cocos2dxActivity extends Activity implements Cocos2dxHelpe
 
         Cocos2dxEngineDataManager.init(this, mGLSurfaceView);
 
-        OifaceManager.getInstance();
+        OifaceGameEngineManager.getInstance();
     }
 
     //native method,call GLViewImpl::getGLContextAttrs() to get the OpenGL ES context attributions

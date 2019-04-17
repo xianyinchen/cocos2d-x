@@ -390,7 +390,7 @@ float TestCase::getDuration() const
     return 0.2f;
 }
 
-static bool isPause = false;
+static bool isPause = true;
 static Label* labelTmp = nullptr;
 
 bool TestCase::init()
@@ -483,7 +483,19 @@ void TestCase::restartTestCallback(Ref* sender)
 {
     if (_testSuite)
     {
-        _testSuite->restartCurrTest();
+        TTFConfig ttfConfig("fonts/arial.ttf", 26);
+        
+        auto backLabel2 = Label::createWithTTF(ttfConfig, "load ...");
+        
+        backLabel2->setPosition(VisibleRect::center().x, VisibleRect::center().y + backLabel2->getContentSize().height / 2 + 25);
+        addChild(backLabel2);
+        
+        backLabel2->setColor(Color3B(255,0,0));
+        backLabel2->setTag(99999);
+        
+        this->runAction(Sequence::create(DelayTime::create(0.1f), CallFunc::create([=](){
+            _testSuite->restartCurrTest();
+        }), nullptr));
     }
 }
 
