@@ -85,6 +85,7 @@ cocos2d.cpp \
 2d/CCTweenFunction.cpp \
 3d/CCFrustum.cpp \
 3d/CCPlane.cpp \
+platform/CCDataManager.cpp \
 platform/CCGLView.cpp \
 platform/CCFileUtils.cpp \
 platform/CCSAXParser.cpp \

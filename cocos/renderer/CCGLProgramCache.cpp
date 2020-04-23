@@ -35,6 +35,7 @@ THE SOFTWARE.
 #if CC_TARGET_PLATFORM == CC_PLATFORM_WP8  || defined(WP8_SHADER_COMPILER)
 #include "ui/shaders/UIShaders.h"
 #endif
+#include "platform/CCDataManager.h"
 
 NS_CC_BEGIN
 
@@ -117,7 +118,13 @@ GLProgramCache::~GLProgramCache()
 
 bool GLProgramCache::init()
 {    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    DataManager::onShaderLoaderBegin();
+#endif
     loadDefaultGLPrograms();
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    DataManager::onShaderLoaderEnd();
+#endif
     return true;
 }
 

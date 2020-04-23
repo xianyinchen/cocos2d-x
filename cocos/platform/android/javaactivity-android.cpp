@@ -36,6 +36,8 @@ THE SOFTWARE.
 #include "renderer/ccGLStateCache.h"
 #include "2d/CCDrawingPrimitives.h"
 #include "platform/android/jni/JniHelper.h"
+#include "platform/CCDataManager.h"
+#include <unistd.h>
 #include <android/log.h>
 #include <jni.h>
 
@@ -58,6 +60,9 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved)
 
 void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeInit(JNIEnv*  env, jobject thiz, jint w, jint h)
 {
+    DataManager::setProcessID(getpid());
+    DataManager::setFrameSize(w, h);
+
     auto director = cocos2d::Director::getInstance();
     auto glview = director->getOpenGLView();
     if (!glview)

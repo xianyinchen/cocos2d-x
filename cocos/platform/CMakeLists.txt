@@ -72,6 +72,7 @@ include_directories(
 
 set(COCOS_PLATFORM_SRC
 
+  platform/CCDataManager.cpp
   platform/CCSAXParser.cpp
   platform/CCThread.cpp
   platform/CCGLView.cpp

@@ -32,6 +32,7 @@ THE SOFTWARE.
 #include "base/CCEventListenerCustom.h"
 #include "renderer/CCRenderer.h"
 #include "deprecated/CCString.h"
+#include "platform/CCDataManager.h"
 
 #if CC_USE_PHYSICS
 #include "physics/CCPhysicsWorld.h"
@@ -55,6 +56,19 @@ Scene::Scene()
     
     _event = Director::getInstance()->getEventDispatcher()->addCustomEventListener(Director::EVENT_PROJECTION_CHANGED, std::bind(&Scene::onProjectionChanged, this, std::placeholders::_1));
     _event->retain();
+
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    DataManager::onSceneLoaderBegin();
+#endif
+}
+
+void Scene::onEnter()
+{
+    Node::onEnter();
+    
+#if CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID
+    DataManager::onSceneLoaderEnd();
+#endif
 }
 
 Scene::~Scene()
