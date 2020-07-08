@@ -278,6 +278,9 @@ public:
      */
     void setVirtualViewport(const Vec2& rtBegin, const Rect& fullRect, const Rect& fullViewport);
 
+    static RenderTexture * current();
+    Rect& getVirtualViewport();
+
 public:
     /** FIXME: should be protected.
      * but due to a bug in PowerVR + Android,
